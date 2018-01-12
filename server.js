@@ -3,6 +3,8 @@ var passport = require('passport');
 var Strategy = require('passport-local').Strategy;
 var db = require('./db');
 
+var dir = require('./app/directory')();
+
 
 // Configure the local strategy for use by Passport.
 //
@@ -72,6 +74,9 @@ app.get('/',
   function(req, res) {
     res.render('home', { user: req.user });
   });
+
+app.get('/signup', require('./app/handlers/signup/show')());
+app.post('/signup', require('./app/handlers/signup/create')(dir));
 
 app.get('/login', require('./app/handlers/login/prompt')());
 app.post('/login', require('./app/handlers/login/authenticate')(passport));
