@@ -4,5 +4,7 @@ exports = module.exports = function() {
     res.render('login');
   }
   
-  return [ render ];
+  return [
+    render
+  ];
 };

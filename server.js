@@ -74,12 +74,7 @@ app.get('/',
   });
 
 app.get('/login', require('./app/handlers/login/prompt')());
-  
-app.post('/login', 
-  passport.authenticate('local', { failureRedirect: '/login' }),
-  function(req, res) {
-    res.redirect('/');
-  });
+app.post('/login', require('./app/handlers/login/authenticate')(passport));
   
 app.get('/logout',
   function(req, res){
