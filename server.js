@@ -1,3 +1,5 @@
+require('dotenv').load();
+
 var express = require('express');
 var db = require('./db');
 
@@ -42,6 +44,10 @@ app.post('/signup', require('./app/handlers/signup/create')(dir));
 
 app.get('/login', require('./app/handlers/login/prompt')());
 app.post('/login', require('./app/handlers/login/authenticate')(passport));
+
+app.get('/login/:issuer', require('./app/handlers/login/federate/initiate')(passport));
+app.get('/login/oauth2/callback', require('./app/handlers/login/oauth2/callback')(passport));
+
   
 app.get('/logout',
   function(req, res){

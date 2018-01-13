@@ -3,6 +3,7 @@ var passport = require('passport');
 
 exports = module.exports = function(directory) {
   passport.use(require('./auth/local')(directory));
+  passport.use('accounts.google.com', require('./auth/google')());
   
 
   // Configure Passport authenticated session persistence.
