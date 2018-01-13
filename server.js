@@ -4,6 +4,7 @@ var express = require('express');
 var db = require('./app/db/db')();
 
 var dir = require('./app/directory')(db);
+var federatedCredentials = require('./app/db/federatedcredentials')(db);
 
 
 var passport = require('./app/authenticator')(dir);
@@ -46,7 +47,7 @@ app.get('/login', require('./app/handlers/login/prompt')());
 app.post('/login', require('./app/handlers/login/authenticate')(passport));
 
 app.get('/login/:issuer', require('./app/handlers/login/federate/initiate')(passport));
-app.get('/login/oauth2/callback', require('./app/handlers/login/oauth2/callback')(passport));
+app.get('/login/oauth2/callback', require('./app/handlers/login/oauth2/callback')(passport, federatedCredentials));
 
   
 app.get('/logout',

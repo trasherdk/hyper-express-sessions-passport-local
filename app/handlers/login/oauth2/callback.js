@@ -1,4 +1,4 @@
-exports = module.exports = function(passport) {
+exports = module.exports = function(passport, federatedCredentials) {
   
   function authenticate(req, res, next) {
     var key = 'oauth2:' + req.query.state
@@ -15,6 +15,17 @@ exports = module.exports = function(passport) {
     console.log(req.authInfo);
     
     var state = req.authInfo.state;
+    
+    
+    var credential = {
+      issuer: state.issuer,
+      subject: req.user.id
+    }
+    
+    federatedCredentials.create(credential, function(err, credential) {
+      console.log(err);
+      console.log(credential);
+    });
   }
   
   

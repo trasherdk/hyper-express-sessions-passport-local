@@ -8,6 +8,13 @@ var sql = "CREATE TABLE IF NOT EXISTS users " +
 
 db.run(sql);
 
+var sql = "CREATE TABLE IF NOT EXISTS federated_credentials " +
+"(id INTEGER PRIMARY KEY, issuer TEXT, " +
+"subject TEXT)";
+
+db.run(sql);
+
+
 
 exports = module.exports = function() {
   return db;
