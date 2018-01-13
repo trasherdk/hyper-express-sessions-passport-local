@@ -71,4 +71,4 @@ Directory.prototype.authenticate = function(username, password, cb) {
 
 exports = module.exports = function() {
   return new Directory();
-}
+};
