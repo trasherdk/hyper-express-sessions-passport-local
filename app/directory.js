@@ -35,6 +35,7 @@ Directory.prototype.find = function(id, cb) {
   }, function(err, row) {
     if (err) { return cb(err); }
     var user = {
+      id: row.id,
       username: row.username,
       name: {
         familyName: row.family_name,
@@ -42,6 +43,27 @@ Directory.prototype.find = function(id, cb) {
       }
     }
     return cb(null, user);
+  });
+}
+
+Directory.prototype.authenticate = function(username, password, cb) {
+  db.get("SELECT * FROM users WHERE username=$username;", {
+    $username: username
+  }, function(err, row) {
+    if (err) { return cb(err); }
+    bcrypt.compare(password, row.hashed_password, function(err, valid) {
+      if (err) { return cb(err); }
+      if (!valid) { return cb(null, false); }
+      var user = {
+        id: row.id,
+        username: row.username,
+        name: {
+          familyName: row.family_name,
+          givenName: row.given_name
+        }
+      }
+      return cb(null, user);
+    });
   });
 }
 

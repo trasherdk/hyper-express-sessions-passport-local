@@ -14,10 +14,9 @@ var dir = require('./app/directory')();
 // will be set at `req.user` in route handlers after authentication.
 passport.use(new Strategy(
   function(username, password, cb) {
-    db.users.findByUsername(username, function(err, user) {
+    dir.authenticate(username, password, function(err, user) {
       if (err) { return cb(err); }
       if (!user) { return cb(null, false); }
-      if (user.password != password) { return cb(null, false); }
       return cb(null, user);
     });
   }));
