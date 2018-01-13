@@ -23,6 +23,22 @@ Directory.prototype.create = function(user, cb) {
   });
 }
 
+Directory.prototype.find = function(id, cb) {
+  db.get("SELECT * FROM users WHERE id=$id;", {
+    $id: id
+  }, function(err, row) {
+    if (err) { return cb(err); }
+    var user = {
+      username: row.username,
+      name: {
+        familyName: row.family_name,
+        givenName: row.given_name
+      }
+    }
+    return cb(null, user);
+  });
+}
+
 
 
 exports = module.exports = function() {
