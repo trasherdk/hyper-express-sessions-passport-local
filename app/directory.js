@@ -1,9 +1,11 @@
 var sqlite3 = require('sqlite3').verbose();
+var bcrypt = require('bcrypt');
+
 var db = new sqlite3.Database('mysqlitedb.db');
 
 var sql = "CREATE TABLE IF NOT EXISTS users " +
 "(id INTEGER PRIMARY KEY, username TEXT, " +
-"password TEXT, family_name TEXT, given_name TEXT)";
+"hashed_password TEXT, family_name TEXT, given_name TEXT)";
 
 db.run(sql);
 
@@ -12,14 +14,18 @@ function Directory() {
 }
 
 Directory.prototype.create = function(user, cb) {
-  // TODO: bcrypt the password
-
-  db.run("INSERT INTO users (username, password) VALUES ($username, $password)", {
-    $username: user.username,
-    $password: user.password
-  }, function(err) {
+  var rounds = 10;
+  
+  bcrypt.hash(user.password, rounds, function(err, hashedPassword) {
     if (err) { return cb(err); }
-    return cb(null, { id: this.lastID });
+
+    db.run("INSERT INTO users (username, hashed_password) VALUES ($username, $hashed_password)", {
+      $username: user.username,
+      $hashed_password: hashedPassword
+    }, function(err) {
+      if (err) { return cb(err); }
+      return cb(null, { id: this.lastID });
+    });
   });
 }
 
