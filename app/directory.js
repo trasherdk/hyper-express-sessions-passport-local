@@ -1,20 +1,13 @@
-var sqlite3 = require('sqlite3').verbose();
 var bcrypt = require('bcrypt');
 
-var db = new sqlite3.Database('mysqlitedb.db');
-
-var sql = "CREATE TABLE IF NOT EXISTS users " +
-"(id INTEGER PRIMARY KEY, username TEXT, " +
-"hashed_password TEXT, family_name TEXT, given_name TEXT)";
-
-db.run(sql);
-
-function Directory() {
-
+function Directory(db) {
+  this._db = db;
 }
 
 Directory.prototype.create = function(user, cb) {
   var rounds = 10;
+  
+  var db = this._db;
   
   bcrypt.hash(user.password, rounds, function(err, hashedPassword) {
     if (err) { return cb(err); }
@@ -30,6 +23,8 @@ Directory.prototype.create = function(user, cb) {
 }
 
 Directory.prototype.find = function(id, cb) {
+  var db = this._db;
+  
   db.get("SELECT * FROM users WHERE id=$id;", {
     $id: id
   }, function(err, row) {
@@ -47,6 +42,8 @@ Directory.prototype.find = function(id, cb) {
 }
 
 Directory.prototype.authenticate = function(username, password, cb) {
+  var db = this._db;
+  
   db.get("SELECT * FROM users WHERE username=$username;", {
     $username: username
   }, function(err, row) {
@@ -69,6 +66,6 @@ Directory.prototype.authenticate = function(username, password, cb) {
 
 
 
-exports = module.exports = function() {
-  return new Directory();
+exports = module.exports = function(db) {
+  return new Directory(db);
 };

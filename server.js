@@ -1,9 +1,9 @@
 require('dotenv').load();
 
 var express = require('express');
-var db = require('./db');
+var db = require('./app/db/db')();
 
-var dir = require('./app/directory')();
+var dir = require('./app/directory')(db);
 
 
 var passport = require('./app/authenticator')(dir);
