@@ -10,7 +10,31 @@ exports = module.exports = function(passport, federatedCredentials, directory) {
     passport.authenticate(issuer)(req, res, next);
   }
   
-  function something(req, res, next) {
+  function findAndLogIn(req, res, next) {
+    var user = req.user;
+    var state = req.authInfo.state;
+    
+    federatedCredentials.find(user.id, state.issuer, function(err, credential) {
+      if (err) { return next(err); }
+      if (!credential) { return next(); }
+      
+      console.log(err);
+      console.log(credential);
+      
+      directory.get(credential.$user, function(err, user) {
+        if (err) { return next(err); }
+        console.log('got existing user!');
+        console.log(user);
+        
+        req.login(user, function(err) {
+          if (err) { return cb(err); }
+          return res.redirect('/');
+        });
+      });
+    });
+  }
+  
+  function registerAndLogIn(req, res, next) {
     console.log('do something now');
     console.log(req.session);
     console.log(req.authInfo);
@@ -52,6 +76,7 @@ exports = module.exports = function(passport, federatedCredentials, directory) {
   
   return [
     authenticate,
-    something
+    findAndLogIn,
+    registerAndLogIn
   ];
 };

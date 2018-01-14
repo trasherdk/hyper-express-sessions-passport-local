@@ -22,6 +22,26 @@ FederatedCredentials.prototype.create = function(credential, relations, cb) {
   });
 }
 
+FederatedCredentials.prototype.find = function(subject, issuer, cb) {
+  var db = this._db;
+  
+  db.get("SELECT * FROM federated_credentials WHERE issuer=$issuer AND subject=$subject;", {
+    $issuer: issuer,
+    $subject: subject
+  }, function(err, row) {
+    if (err) { return cb(err); }
+    if (!row) { return cb(null); }
+    
+    var obj = {
+      id: row.id,
+      issuer: row.issuer,
+      subject: row.subject,
+      $user: row.user_id
+    }
+    return cb(null, obj);
+  });
+}
+
 
 
 exports = module.exports = function(db) {

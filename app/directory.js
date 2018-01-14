@@ -35,7 +35,7 @@ Directory.prototype.create = function(user, cb) {
   }
 }
 
-Directory.prototype.find = function(id, cb) {
+Directory.prototype.get = function(id, cb) {
   var db = this._db;
   
   db.get("SELECT * FROM users WHERE id=$id;", {

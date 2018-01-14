@@ -18,7 +18,7 @@ exports = module.exports = function(directory) {
   });
 
   passport.deserializeUser(function(id, cb) {
-    directory.find(id, function(err, user) {
+    directory.get(id, function(err, user) {
       if (err) { return cb(err); }
       return cb(null, user);
     });
