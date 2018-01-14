@@ -47,7 +47,7 @@ app.get('/login', require('./app/handlers/login/prompt')());
 app.post('/login', require('./app/handlers/login/authenticate')(passport));
 
 app.get('/login/:issuer', require('./app/handlers/login/federate/initiate')(passport));
-app.get('/login/oauth2/callback', require('./app/handlers/login/oauth2/callback')(passport, federatedCredentials));
+app.get('/login/oauth2/callback', require('./app/handlers/login/oauth2/callback')(passport, federatedCredentials, dir));
 
   
 app.get('/logout',
@@ -59,6 +59,8 @@ app.get('/logout',
 app.get('/profile',
   require('connect-ensure-login').ensureLoggedIn(),
   function(req, res){
+    console.log(req.user);
+    
     res.render('profile', { user: req.user });
   });
 

@@ -10,7 +10,7 @@ db.run(sql);
 
 var sql = "CREATE TABLE IF NOT EXISTS federated_credentials " +
 "(id INTEGER PRIMARY KEY, issuer TEXT, " +
-"subject TEXT)";
+"subject TEXT, user_id INTEGER NOT NULL)";
 
 db.run(sql);
 

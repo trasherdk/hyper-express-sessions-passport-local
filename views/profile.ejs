@@ -2,6 +2,10 @@
 ID: <%= user.id %><br/>
 Username: <%= user.username %><br/>
 Name: <%= user.displayName %><br/>
+<% if (user.name) { %>
+First Name: <%= user.name.givenName %><br/>
+Last Name: <%= user.name.familyName %><br/>
+<% } %>
 <% if (user.emails) { %>
 Email: <%= user.emails[0].value %><br/>
 <% } %>

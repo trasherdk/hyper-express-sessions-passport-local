@@ -1,4 +1,4 @@
-exports = module.exports = function(passport, federatedCredentials) {
+exports = module.exports = function(passport, federatedCredentials, directory) {
   
   function authenticate(req, res, next) {
     var key = 'oauth2:' + req.query.state
@@ -6,6 +6,7 @@ exports = module.exports = function(passport, federatedCredentials) {
       , issuer;
     
     issuer = state.issuer;
+    // TODO: session = false
     passport.authenticate(issuer)(req, res, next);
   }
   
@@ -13,18 +14,38 @@ exports = module.exports = function(passport, federatedCredentials) {
     console.log('do something now');
     console.log(req.session);
     console.log(req.authInfo);
+    console.log(req.user)
     
     var state = req.authInfo.state;
     
     
-    var credential = {
-      issuer: state.issuer,
-      subject: req.user.id
+    var user = {
+      username: req.body.username,
+      password: req.body.password
     }
     
-    federatedCredentials.create(credential, function(err, credential) {
-      console.log(err);
-      console.log(credential);
+    directory.create(req.user, function(err, user) {
+      if (err) { return next(err); }
+      
+      console.log('CREATED USER!')
+      console.log(user);
+      
+      var credential = {
+        issuer: state.issuer,
+        subject: req.user.id
+      }
+      
+      federatedCredentials.create(credential, { user: user }, function(err, credential) {
+        if (err) { return next(err); }
+        
+        console.log(err);
+        console.log(credential);
+        
+        req.login(user, function(err) {
+          if (err) { return cb(err); }
+          return res.redirect('/');
+        });
+      });
     });
   }
   
