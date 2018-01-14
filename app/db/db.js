@@ -8,9 +8,13 @@ var sql = "CREATE TABLE IF NOT EXISTS users " +
 
 db.run(sql);
 
-var sql = "CREATE TABLE IF NOT EXISTS federated_credentials " +
-"(id INTEGER PRIMARY KEY, issuer TEXT, " +
-"subject TEXT, user_id INTEGER NOT NULL)";
+var sql = "CREATE TABLE IF NOT EXISTS federated_credentials (" +
+  "id INTEGER PRIMARY KEY, " +
+  "issuer TEXT, " +
+  "subject TEXT, " +
+  "user_id INTEGER NOT NULL, " +
+  "UNIQUE (issuer, subject)" +
+")";
 
 db.run(sql);
 
