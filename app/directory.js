@@ -5,21 +5,34 @@ function Directory(db) {
 }
 
 Directory.prototype.create = function(user, cb) {
+  var db = this._db;
   var rounds = 10;
   
-  var db = this._db;
-  
-  bcrypt.hash(user.password, rounds, function(err, hashedPassword) {
-    if (err) { return cb(err); }
-
-    db.run("INSERT INTO users (username, hashed_password) VALUES ($username, $hashed_password)", {
+  function create(user, hashedPassword) {
+    var values = {
       $username: user.username,
       $hashed_password: hashedPassword
-    }, function(err) {
+    };
+    if (user.name) {
+      values['$family_name'] = user.name.familyName;
+      values['$given_name'] = user.name.givenName;
+    }
+
+    db.run("INSERT INTO users (username, hashed_password, family_name, given_name) VALUES ($username, $hashed_password, $family_name, $given_name)",
+    values, function(err) {
       if (err) { return cb(err); }
       return cb(null, { id: this.lastID });
     });
-  });
+  }
+  
+  if (user.password) {
+    bcrypt.hash(user.password, rounds, function(err, hashedPassword) {
+      if (err) { return cb(err); }
+      create(user, hashedPassword);
+    });
+  } else {
+    create(user);
+  }
 }
 
 Directory.prototype.find = function(id, cb) {
