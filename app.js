@@ -1,6 +1,7 @@
 var HyperExpress = require('hyper-express');
 var LiveDirectory = require('live-directory');
 var passport = require('passport');
+var path = require('path')
 
 var sessions = require('./boot/sessions')
 var indexRouter = require('./routes/index');
@@ -33,17 +34,13 @@ app.use('/myaccount', myaccountRouter);
 app.use('/users', usersRouter);
 
 // Create static serve route to serve frontend assets
-/*
 const LiveAssets = new LiveDirectory({ path: path.join(__dirname, 'public') });
-app.use('/',(request, response) => {
-  console.log('static', request.path)
-  const file = LiveAssets.get(request.path);
-  // Return a 404 if no asset/file exists on the derived path
-  if (file === undefined) return response.status(404).send();
-  // Set appropriate mime-type and serve file buffer as response body
-  return response.type(file.extension).send(file.buffer);
+app.get('/*',(request, response) => {
+  const found = LiveAssets.get(request.path);
+  if (!found) return response.status(404).send();
+  return response.type(found.extension).send(found.buffer);
 });
-*/
+
 app.listen(port)
 .then((socket) => console.log('Webserver started'))
 .catch((error) => console.log('Failed to start webserver'));
