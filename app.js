@@ -41,9 +41,9 @@ app.use('/users', usersRouter);
 
 // Create static serve route to serve frontend assets
 
-const LiveAssets = new LiveDirectory({ path: path.join(__dirname, 'public') });
+const staticAssets = new LiveDirectory({ path: path.join(__dirname, 'public') });
 app.get('/*',(req, res) => {
-  const found = LiveAssets.get(req.path);
+  const found = staticAssets.get(req.path);
   if (!found) return res.status(404).send();
   return res.type(found.extension).send(found.buffer);
 });
