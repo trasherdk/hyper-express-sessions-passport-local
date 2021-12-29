@@ -12,7 +12,7 @@ router.get('/login', function(req, res, next) {
   });
 });
 
-router.post('/login/password', passport.authenticate('local', {
+router.post('/login/password', {expect_body: 'json'}, passport.authenticate('local', {
   successRedirect: '/',
   failureRedirect: '/login',
   failureMessage: true
