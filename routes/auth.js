@@ -1,7 +1,7 @@
-var express = require('express');
+var HyperExpress = require('hyper-express');
 var passport = require('passport');
 
-var router = express.Router();
+var router = new HyperExpress.Router();
 
 /* GET users listing. */
 router.get('/login', function(req, res, next) {

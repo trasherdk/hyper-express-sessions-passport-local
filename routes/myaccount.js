@@ -1,8 +1,8 @@
-var express = require('express');
+var HyperExpress = require('hyper-express');
+var router = new HyperExpress.Router();
+
 var ensureLoggedIn = require('connect-ensure-login').ensureLoggedIn;
 var db = require('../db');
-
-var router = express.Router();
 
 /* GET users listing. */
 router.get('/',

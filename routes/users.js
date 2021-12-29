@@ -1,8 +1,8 @@
-var express = require('express');
+var HyperExpress = require('hyper-express');
 var crypto = require('crypto');
 var db = require('../db');
 
-var router = express.Router();
+var router = new HyperExpress.Router();
 
 router.get('/new', function(req, res, next) {
   res.render('signup');
