@@ -1,5 +1,6 @@
 var HyperExpress = require('hyper-express');
 var router = new HyperExpress.Router();
+var ejs = require('ejs')
 
 var ensureLoggedIn = require('connect-ensure-login').ensureLoggedIn;
 var db = require('../db');
@@ -18,7 +19,7 @@ router.get('/',
         username: row.username,
         displayName: row.name
       };
-      res.render('profile', { user: user });
+      res.send(ejs.compile('profile', {views: ['views']})({ user }));
     });
   });
 

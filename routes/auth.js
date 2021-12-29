@@ -1,11 +1,15 @@
 var HyperExpress = require('hyper-express');
 var passport = require('passport');
+var render = require('../boot/render')
 
 var router = new HyperExpress.Router();
 
 /* GET users listing. */
 router.get('/login', function(req, res, next) {
-  res.render('login');
+  render("login.ejs", { hasMessages: false, messages: []}, (err, str) => {
+    if (err) next(err);
+    res.send(str);
+  });
 });
 
 router.post('/login/password', passport.authenticate('local', {

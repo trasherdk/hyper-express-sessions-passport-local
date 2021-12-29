@@ -1,7 +1,6 @@
 var HyperExpress = require('hyper-express');
 var LiveDirectory = require('live-directory');
 var passport = require('passport');
-var path = require('path');
 
 var sessions = require('./boot/sessions')
 var indexRouter = require('./routes/index');

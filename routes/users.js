@@ -1,11 +1,16 @@
 var HyperExpress = require('hyper-express');
 var crypto = require('crypto');
+
+var render = require('../boot/render')
 var db = require('../db');
 
 var router = new HyperExpress.Router();
 
 router.get('/new', function(req, res, next) {
-  res.render('signup');
+  render("signup.ejs", {}, (err, str) => {
+    if (err) next(err);
+    res.send(str);
+  });
 });
 
 router.post('/', function(req, res, next) {
