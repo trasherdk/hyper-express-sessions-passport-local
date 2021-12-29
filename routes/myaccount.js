@@ -10,7 +10,7 @@ router.get('/',
   ensureLoggedIn(),
   function(req, res, next) {
     db.get('SELECT rowid AS id, username, name FROM users WHERE rowid = ?', [ req.user.id ], function(err, row) {
-      if (err) { return next(err); }
+      if (err) throw err;
     
       // TODO: Handle undefined row.
     

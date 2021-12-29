@@ -9,12 +9,14 @@ var authRouter = require('./routes/auth');
 var myaccountRouter = require('./routes/myaccount');
 var usersRouter = require('./routes/users');
 
-var app = new HyperExpress.Server();
+require('./boot/db')();
+require('./boot/auth')();
 
 var port = 3000
 
-require('./boot/db')();
-require('./boot/auth')();
+var app = new HyperExpress.Server();
+
+// Configure Sessions
 
 app.use(sessions);
 app.use(function(req, res, next) {
@@ -25,21 +27,36 @@ app.use(function(req, res, next) {
   next();
 });
 
+// Configure Passport
+
 app.use(passport.authenticate('session'));
 
-// Define routes.
+// Define server rendered html page routes.  
+// See myaccountRouter for authorization example.
+
 app.use('/', indexRouter);
 app.use('/', authRouter);
 app.use('/myaccount', myaccountRouter);
 app.use('/users', usersRouter);
 
 // Create static serve route to serve frontend assets
+
 const LiveAssets = new LiveDirectory({ path: path.join(__dirname, 'public') });
-app.get('/*',(request, response) => {
-  const found = LiveAssets.get(request.path);
-  if (!found) return response.status(404).send();
-  return response.type(found.extension).send(found.buffer);
+app.get('/*',(req, res) => {
+  const found = LiveAssets.get(req.path);
+  if (!found) return res.status(404).send();
+  return res.type(found.extension).send(found.buffer);
 });
+
+// Configure Hyperexpress not found and error handlers.
+
+app.set_error_handler((req, res, error) => {
+  console.log('error handler')
+  res.status(500).send(JSON.stringify(error.toString()));
+})
+app.set_not_found_handler((req, res) => {
+  res.status(404).send('not found');
+})
 
 app.listen(port)
 .then((socket) => console.log('Webserver started'))

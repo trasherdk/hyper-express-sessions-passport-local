@@ -7,7 +7,7 @@ var router = new HyperExpress.Router();
 /* GET users listing. */
 router.get('/login', function(req, res, next) {
   render("login.ejs", { hasMessages: false, messages: []}, (err, str) => {
-    if (err) next(err);
+    if (err) throw err;
     res.send(str);
   });
 });

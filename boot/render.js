@@ -1,15 +1,16 @@
 var ejs = require("ejs");
 var path = require("path");
-var base = path.resolve(__dirname, '../views')
+var base = path.resolve(__dirname, "../views");
 
-function render(fileName, data, callback) {
-  const templatePath = path.resolve(base, fileName)
-  ejs.renderFile(
-    templatePath,
-    data,
-    { views: [base] },
-    callback
-  );
-};
+async function render(fileName, data) {
+  console.log('render')
+  const templatePath = path.resolve(base, fileName);
+  return new Promise((resolve, reject) => {
+    ejs.renderFile(templatePath, data, { views: [base] }, (err, str) => {
+      if (err) return reject(err);
+      resolve(str);
+    });
+  });
+}
 
-module.exports = render
+module.exports = render;
