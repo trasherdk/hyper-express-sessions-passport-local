@@ -14,7 +14,7 @@
     "live-directory": "^2.3.2",
     "morgan": "^1.9.1",
     "node-localstorage": "^2.2.1",
-    "nodemon": "^2.0.15",
+    "nodemon": "^2.0.20",
     "passport": "^0.5.1",
     "passport-local": "^1.0.0",
     "sqlite3": "^5.0.3"
